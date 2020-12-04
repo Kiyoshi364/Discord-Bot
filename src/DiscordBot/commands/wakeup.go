@@ -17,6 +17,7 @@ const (
 )
 
 type WakeupCommand struct {
+	BasicCommand
 }
 
 
@@ -32,11 +33,16 @@ func (c *WakeupCommand) Aliases() []string {
 	return []string{Wakeup_Default_Alias}
 }
 
+func (c *WakeupCommand) NameMatch(s string) (match bool, read int) {
+	match, read = c.MatchHelper(s, c.Aliases())
+	return
+}
+
 // TODO: find a way to get user's initial channel and return him there
 func (c *WakeupCommand) Run(s *discordgo.Session, m *discordgo.MessageCreate, begin int) (err error) {
 
 	// Parse info
-	in := m.Content[begin+len(c.Aliases()[0]):]
+	in := m.Content[begin:]
 
 	words := strings.Split(in, " ")
 	words = words[1:]

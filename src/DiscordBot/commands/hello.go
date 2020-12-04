@@ -13,6 +13,7 @@ const (
 )
 
 type HelloCommand struct {
+	BasicCommand
 }
 
 
@@ -28,9 +29,13 @@ func (c *HelloCommand) Aliases() []string {
 	return []string{Hello_Default_Alias}
 }
 
+func (c *HelloCommand) NameMatch(s string) (match bool, read int) {
+	return c.MatchHelper(s, c.Aliases())
+}
+
 func (c *HelloCommand) Run(s *discordgo.Session, m *discordgo.MessageCreate, begin int) error {
 
-	left := m.Content[begin+len(c.Aliases()[0]):]
+	left := m.Content[begin:]
 
 	id := m.Author.ID
 	msg := "Hallo, <@" + id + ">" + left

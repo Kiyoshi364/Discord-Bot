@@ -1,4 +1,4 @@
-package config
+package discordbot
 
 import (
 	"encoding/json"
@@ -6,12 +6,7 @@ import (
 	"io/ioutil"
 )
 
-type BotConfig struct {
-	Token		string `json:"Token"`
-	BotPrefix	string `json:"BotPrefix"`
-}
-
-func ReadConfig(filename string) (botConfig *BotConfig, err error) {
+func ReadConfig(filename string, bot *BotConfig) (err error) {
 	fmt.Printf("Reading file %s...\n", filename)
 
 	file, er := ioutil.ReadFile(filename)
@@ -20,9 +15,9 @@ func ReadConfig(filename string) (botConfig *BotConfig, err error) {
 		return
 	}
 
-	fmt.Println(string(file))
+	// fmt.Println(string(file))
 
-	er = json.Unmarshal(file, botConfig)
+	er = json.Unmarshal(file, bot)
 	if er != nil {
 		err = fmt.Errorf("ReadConfig Unmarshal: %s", er)
 		return
