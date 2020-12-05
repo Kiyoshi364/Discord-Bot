@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	Num_Commands	= 2
+	Num_Commands	= 3
 )
 
 type BotConfig struct {
@@ -34,8 +34,9 @@ func newBot(filename string) (bot *BotConfig, err error) {
 func addCommands(bot *BotConfig) {
 	bot.Commands = make([]commands.Command, Num_Commands, Num_Commands)
 
-	bot.Commands[0] = &commands.HelloCommand{}
-	bot.Commands[1] = &commands.WakeupCommand{}
+	bot.Commands[0] = &commands.HelpCommand{ Commands: bot.Commands }
+	bot.Commands[1] = &commands.HelloCommand{}
+	bot.Commands[2] = &commands.WakeupCommand{}
 }
 
 func (bot *BotConfig) MessageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {

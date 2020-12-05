@@ -3,15 +3,11 @@ package commands
 import (
 	"github.com/bwmarrin/discordgo"
 	"strings"
-	"fmt"
 )
 
 type Command interface {
-	// Returns a basic description, what the command does
-	Description() string
-
 	// Returns a detailed description, what the command does, arguments...
-	Help() string
+	Description() string
 
 	// All names accepted for calling this command
 	Aliases() []string
@@ -28,10 +24,6 @@ type BasicCommand struct {
 
 func (c *BasicCommand) Description() string {
 	return "Description"
-}
-
-func (c *BasicCommand) Help() string {
-	return "Help"
 }
 
 func (c *BasicCommand) Aliases() []string {
@@ -52,8 +44,6 @@ func (c *BasicCommand) MatchHelper(s string, aliases []string) (match bool, read
 			return
 		}
 	}
-
-	fmt.Println("DEGUB " + s + "\n" + aliases[0])
 
 	return
 }

@@ -8,7 +8,6 @@ import (
 const (
 	Hello_Description = `command: hello
 	Answers with "Hallo"`
-	Hello_Help = Hello_Description
 	Hello_Default_Alias = "hello"
 )
 
@@ -19,10 +18,6 @@ type HelloCommand struct {
 
 func (c *HelloCommand) Description() string {
 	return Hello_Description
-}
-
-func (c *HelloCommand) Help() string {
-	return Hello_Help
 }
 
 func (c *HelloCommand) Aliases() []string {

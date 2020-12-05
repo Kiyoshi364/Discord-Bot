@@ -12,7 +12,6 @@ const (
 		Move <user> para <channel 1>
 		Move <user> para <channel 2>
 	Move <user> para o canal que estava antes`
-	Wakeup_Help = Wakeup_Description
 	Wakeup_Default_Alias = "wakeup"
 )
 
@@ -23,10 +22,6 @@ type WakeupCommand struct {
 
 func (c *WakeupCommand) Description() string {
 	return Wakeup_Description
-}
-
-func (c *WakeupCommand) Help() string {
-	return Wakeup_Help
 }
 
 func (c *WakeupCommand) Aliases() []string {
