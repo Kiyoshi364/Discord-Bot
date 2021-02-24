@@ -39,7 +39,7 @@ func (c *BasicCommand) MatchHelper(s string, aliases []string) (match bool, read
 	match, read = false, 0
 
 	for _,command := range aliases {
-		if strings.HasPrefix(s, command) {
+		if strings.HasPrefix(s + " ", command + " ") {
 			match, read = true, len(command)
 			return
 		}

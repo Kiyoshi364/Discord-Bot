@@ -15,7 +15,6 @@ type HelloCommand struct {
 	BasicCommand
 }
 
-
 func (c *HelloCommand) Description() string {
 	return Hello_Description
 }
