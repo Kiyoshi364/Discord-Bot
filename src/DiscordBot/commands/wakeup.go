@@ -7,11 +7,11 @@ import (
 )
 
 const (
-	Wakeup_Description = `command: wakeup <user> <channel 1> <channel 2>
+	Wakeup_Description = `command: wakeup <@user> <#channel 1> <#channel 2> [<#channel 3>]
 	Repete 3 vezes
-		Move <user> para <channel 1>
-		Move <user> para <channel 2>
-	Move <user> para o canal que estava antes`
+		Move <@user> para <#channel 1>
+		Move <@user> para <#channel 2>
+    Move <@user> para <#channel 3> ( TODO: ou o canal que estava antes )`
 	Wakeup_Default_Alias = "wakeup"
 )
 
@@ -105,7 +105,18 @@ func (c *WakeupCommand) Run(s *discordgo.Session, m *discordgo.MessageCreate, be
 			return fmt.Errorf("Wakeup Run CMSend: %s :> %v", msg,  err.Error())
 		}
 		return nil
-	} else if chan0 == "" {
+	}
+
+    if chan0 == "" {
+        /* TODO
+        chans, err := s.GuildChannels(m.GuildID)
+        for c := range chans {
+            if found {
+                chan0 = this
+                break
+            }
+        }
+        //*/
 		chan0 = chan1
 	}
 
@@ -116,6 +127,7 @@ func (c *WakeupCommand) Run(s *discordgo.Session, m *discordgo.MessageCreate, be
 	} else {
 		username = user.Username + " "
 	}
+
 
 	msg := "Waking " + username + "up Process Iniciated"
 	_, err = s.ChannelMessageSend(m.ChannelID, msg)
