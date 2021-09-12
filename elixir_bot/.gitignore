@@ -1,44 +1,17 @@
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-
-# Test binary, built with `go test -c`
-*.test
-
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
-
-# Vim
-*~
-
-# JSON
-*.json
-
-# Dependency directories (remove the comment below to include it)
-# vendor/
-
-## elixir_bot
-
-# elixir_bot config file
-config
-
 # The directory Mix will write compiled artifacts to.
-/elixir_bot/_build/
+/_build/
 
 # If you run "mix test --cover", coverage assets end up here.
-/elixir_bot/cover/
+/cover/
 
 # The directory Mix downloads your dependencies sources to.
-/elixir_bot/deps/
+/deps/
 
 # Where third-party dependencies like ExDoc output generated docs.
-/elixir_bot/doc/
+/doc/
 
 # Ignore .fetch files in case you like to edit your project deps locally.
-/elixir_bot/.fetch
+/.fetch
 
 # If the VM crashes, it generates a dump, let's ignore it too.
 erl_crash.dump
@@ -51,4 +24,4 @@ elixir_bot-*.tar
 
 
 # Temporary files for e.g. tests
-/elixir_bot/tmp
+/tmp
