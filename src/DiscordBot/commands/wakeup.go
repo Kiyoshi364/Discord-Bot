@@ -8,10 +8,11 @@ import (
 
 const (
 	Wakeup_Description = `command: wakeup <@user> <#channel 1> <#channel 2> [<#channel 3>]
-	Repete 3 vezes
+	Repete n vezes
 		Move <@user> para <#channel 1>
 		Move <@user> para <#channel 2>
-    Move <@user> para <#channel 3> ( TODO: ou o canal que estava antes )`
+    Move <@user> para <#channel 3> ( TODO: ou o canal que estava antes )
+    n é 3`
 	Wakeup_Default_Alias = "wakeup"
 )
 
