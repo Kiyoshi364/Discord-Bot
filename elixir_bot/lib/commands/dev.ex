@@ -7,8 +7,9 @@ defmodule ElixirBot.Commands.Dev do
   Cogs.group("dev")
 
   Cogs.set_parser(:tt, &([String.split(&1)]))
-  Cogs.def tt(rest \\ "") do
-    alias Alchemy.Client
+  Cogs.def tt(_rest \\ "") do
+    # alias Alchemy.Client
+    _u = message
     # Client.create_channel(message.gui
   end
 
@@ -82,6 +83,132 @@ defmodule ElixirBot.Commands.Dev do
     |> Embed.send("send_content")
 
     Cogs.say "Embed"
+  end
+
+  Cogs.def guild(_a \\ "") do
+    require Alchemy.Embed
+
+    {:ok, guild} = Cogs.guild()
+
+    %Embed{}
+    |> Embed.title("Guild")
+    |> Embed.color(@default_color)
+    |> Embed.field("afk_channel_id", "#{guild.afk_channel_id}")
+    |> Embed.field("afk_timeout", "#{guild.afk_timeout}")
+    |> Embed.field("channels", "<> []ChannelCategory|TextChannel|VoiceChannel")
+    |> Embed.field("default_message_notifications", "#{guild.default_message_notifications}")
+    |> Embed.field("embed_enabled", "#{guild.embed_enabled} <end>")
+    |> Embed.field("emojis", "#{guild.emojis} <end>")
+    |> Embed.field("icon", "#{guild.icon} <end>")
+    |> Embed.field("id", "#{guild.id}")
+    |> Embed.field("joined_at", "#{guild.joined_at}")
+    |> Embed.field("large", "#{guild.large}")
+    |> Embed.field("member_count", "#{guild.member_count}")
+    |> Embed.field("members", "<> []GuildMember")
+    |> Embed.field("mfa_level", "#{guild.mfa_level}")
+    |> Embed.field("name", "#{guild.name}")
+    |> Embed.field("presences", "#{guild.presences} <end>")
+    |> Embed.field("region", "#{guild.region}")
+    |> Embed.field("roles", "<> []Role")
+    |> Embed.field("splash", "#{guild.splash} <end>")
+    |> Embed.field("unavailable", "#{guild.unavailable}")
+    |> Embed.field("verification_level", "#{guild.verification_level}")
+    |> Embed.field("voice_states", "#{guild.voice_states} <end>")
+    |> Embed.send
+
+    Cogs.say "Guild"
+  end
+
+  Cogs.def channel(_a \\ "") do
+    require Alchemy.Embed
+
+    {:ok, guild} = Cogs.guild()
+    channels = guild.channels
+
+    case firstChannelCategory(channels) do
+      nil -> :ok
+      category ->
+        %Embed{}
+          |> Embed.title("Channel Category")
+          |> Embed.color(@default_color)
+          |> Embed.field("guild_id", "#{category.guild_id} <end>")
+          |> Embed.field("id", "#{category.id}")
+          |> Embed.field("name", "#{category.name}")
+          |> Embed.field("nsfw", "#{category.nsfw}")
+          |> Embed.field("permission_overwrites", "<> []OverWrite")
+          |> Embed.field("position", "#{category.position}")
+          |> Embed.send
+    end
+
+    case firstTextChannel(channels) do
+      nil -> :ok
+      text ->
+        %Embed{}
+          |> Embed.title("Text Channel")
+          |> Embed.color(@default_color)
+          |> Embed.field("guild_id", "#{text.guild_id} <end>")
+          |> Embed.field("id", "#{text.id}")
+          |> Embed.field("last_message_id", "#{text.last_message_id}")
+          |> Embed.field("last_pin_timestamp", "#{text.last_pin_timestamp} <end>")
+          |> Embed.field("name", "#{text.name}")
+          |> Embed.field("nsfw", "#{text.nsfw}")
+          |> Embed.field("parent_id", "#{text.parent_id}")
+          |> Embed.field("permission_overwrites", "<> []OverWrite")
+          |> Embed.field("position", "#{text.position}")
+          |> Embed.field("topic", "#{text.topic} <end>")
+          |> Embed.send
+    end
+
+    case firstVoiceChannel(channels) do
+      nil -> :ok
+      voice ->
+        %Embed{}
+          |> Embed.title("Voice Channel")
+          |> Embed.color(@default_color)
+          |> Embed.field("bitrate", "#{voice.bitrate}")
+          |> Embed.field("guild_id", "#{voice.guild_id} <end>")
+          |> Embed.field("id", "#{voice.id}")
+          |> Embed.field("name", "#{voice.name}")
+          |> Embed.field("nsfw", "#{voice.nsfw} <end>")
+          |> Embed.field("parent_id", "#{voice.parent_id}")
+          |> Embed.field("permission_overwrites", "<> []OverWrite")
+          |> Embed.field("position", "#{voice.position}")
+          |> Embed.field("user_limit", "#{voice.user_limit}")
+          |> Embed.send
+    end
+
+    Cogs.say "Channel"
+  end
+
+  defp firstChannelCategory([]) do
+    nil
+  end
+  defp firstChannelCategory([ h | t ]) do
+    case h do
+      %{bitrate: _bitrate} -> firstChannelCategory(t)
+      %{topic: _topic} -> firstChannelCategory(t)
+      _ -> h
+    end
+  end
+
+  defp firstTextChannel([]) do
+    nil
+  end
+  defp firstTextChannel([ h | t ]) do
+    case h do
+      %{topic: _topic} -> h
+      _ -> firstTextChannel(t)
+    end
+  end
+
+  defp firstVoiceChannel([]) do
+    nil
+  end
+  defp firstVoiceChannel([ h | t ]) do
+    case h do
+      %{bitrate: _bitrate} -> h
+      _ -> firstVoiceChannel(t)
+    end
   end
 
 end

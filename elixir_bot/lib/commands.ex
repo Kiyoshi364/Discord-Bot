@@ -55,4 +55,14 @@ defmodule ElixirBot.Commands do
     |> Embed.send
   end
 
+  Cogs.set_parser(:ping, &List.wrap/1)
+  Cogs.def play(rest) do
+    # require Alchemy.Voice
+
+    # {:ok, guild} = Cogs.guild()
+
+    # Voice.join()
+    # Voice.play_url(channel_id, url)
+  end
+
 end
