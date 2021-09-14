@@ -1,12 +1,14 @@
 defmodule ElixirBot.Commands.Dev do
   use Alchemy.Cogs
   alias Alchemy.{Embed}
+  alias ElixirBot.Utils.Channel
 
   @default_color 0x410056
 
   Cogs.group("dev")
 
-  Cogs.set_parser(:tt, &([String.split(&1)]))
+  Cogs.set_parser(:tt, &[String.split(&1)])
+
   Cogs.def tt(_rest \\ "") do
     # alias Alchemy.Client
     _u = message
@@ -17,31 +19,62 @@ defmodule ElixirBot.Commands.Dev do
     require Alchemy.Embed
 
     attachments =
-    if message.attachments != [] do message.attachments else "[]" end
+      if message.attachments != [] do
+        message.attachments
+      else
+        "[]"
+      end
 
     edited_timestamp =
-    if message.edited_timestamp do message.edited_timestamp else "nil" end
+      if message.edited_timestamp do
+        message.edited_timestamp
+      else
+        "nil"
+      end
 
     embeds =
-    if message.embeds != [] do message.embeds else "[]" end
+      if message.embeds != [] do
+        message.embeds
+      else
+        "[]"
+      end
 
     mention_roles =
-    if message.mention_roles != [] do message.mention_roles else "[]" end
+      if message.mention_roles != [] do
+        message.mention_roles
+      else
+        "[]"
+      end
 
     mentions =
-    if message.mentions != [] do message.mentions else "[]" end
+      if message.mentions != [] do
+        message.mentions
+      else
+        "[]"
+      end
 
     reactions =
-    if message.reactions do message.reactions else "nil" end
+      if message.reactions do
+        message.reactions
+      else
+        "nil"
+      end
 
     webhook_id =
-    if message.webhook_id do message.webhook_id else "nil" end
+      if message.webhook_id do
+        message.webhook_id
+      else
+        "nil"
+      end
 
     %Embed{}
     |> Embed.title("Message")
     # |> Embed.description("description")
     |> Embed.field("attachments", "#{attachments}")
-    |> Embed.field("author", "avatar: #{message.author.avatar}\nbot: #{message.author.bot}\ndiscriminator: #{message.author.discriminator}\nemail: #{message.author.email}\nid: #{message.author.id}\nusername: #{message.author.username}\nverified: #{message.author.verified}")
+    |> Embed.field(
+      "author",
+      "avatar: #{message.author.avatar}\nbot: #{message.author.bot}\ndiscriminator: #{message.author.discriminator}\nemail: #{message.author.email}\nid: #{message.author.id}\nusername: #{message.author.username}\nverified: #{message.author.verified}"
+    )
     |> Embed.field("channel_id", "#{message.channel_id}")
     |> Embed.field("content", "#{message.content}")
     |> Embed.field("edited_timestamp", "#{edited_timestamp}")
@@ -57,32 +90,37 @@ defmodule ElixirBot.Commands.Dev do
     |> Embed.field("tts", "#{message.tts}")
     |> Embed.field("webhook_id", "#{webhook_id}")
     |> Embed.color(@default_color)
-    |> Embed.send
+    |> Embed.send()
 
-    Cogs.say "message"
+    Cogs.say("message")
   end
 
   Cogs.def embed(_a \\ "") do
     require Alchemy.Embed
+
     %Embed{}
     |> Embed.title("title")
     |> Embed.url("https://www.ecosia.org/search?q=url")
     |> Embed.author(
       name: "author_name",
       url: "https://www.ecosia.org/search?q=author+name",
-      icon_url: "https://essayclick.net/static/img/regular/Famous-American-Authors.jpg")
+      icon_url: "https://essayclick.net/static/img/regular/Famous-American-Authors.jpg"
+    )
     |> Embed.thumbnail("https://louisem.com/wp-content/uploads/2017/06/youtube-thumbnail-FB.jpg")
     |> Embed.color(@default_color)
     |> Embed.description("description")
     |> Embed.field("my_field_name", "my_field_value")
-    |> Embed.image("http://www.fotos-imagens.net/wp-content/uploads/2011/08/Imagens-Bonitas-quadro-550x371.jpg")
+    |> Embed.image(
+      "http://www.fotos-imagens.net/wp-content/uploads/2011/08/Imagens-Bonitas-quadro-550x371.jpg"
+    )
     |> Embed.footer(
       text: "footer_text",
-      icon_url: "https://www.wirelesseducation.org/wp-content/uploads/2016/03/footer.png")
+      icon_url: "https://www.wirelesseducation.org/wp-content/uploads/2016/03/footer.png"
+    )
     |> Embed.timestamp(DateTime.utc_now())
     |> Embed.send("send_content")
 
-    Cogs.say "Embed"
+    Cogs.say("Embed")
   end
 
   Cogs.def guild(_a \\ "") do
@@ -114,9 +152,9 @@ defmodule ElixirBot.Commands.Dev do
     |> Embed.field("unavailable", "#{guild.unavailable}")
     |> Embed.field("verification_level", "#{guild.verification_level}")
     |> Embed.field("voice_states", "#{guild.voice_states} <end>")
-    |> Embed.send
+    |> Embed.send()
 
-    Cogs.say "Guild"
+    Cogs.say("Guild")
   end
 
   Cogs.def channel(_a \\ "") do
@@ -125,90 +163,61 @@ defmodule ElixirBot.Commands.Dev do
     {:ok, guild} = Cogs.guild()
     channels = guild.channels
 
-    case firstChannelCategory(channels) do
-      nil -> :ok
-      category ->
-        %Embed{}
-          |> Embed.title("Channel Category")
-          |> Embed.color(@default_color)
-          |> Embed.field("guild_id", "#{category.guild_id} <end>")
-          |> Embed.field("id", "#{category.id}")
-          |> Embed.field("name", "#{category.name}")
-          |> Embed.field("nsfw", "#{category.nsfw}")
-          |> Embed.field("permission_overwrites", "<> []OverWrite")
-          |> Embed.field("position", "#{category.position}")
-          |> Embed.send
-    end
+    channels
+    |> Enum.filter(&Channel.channelCategory?/1)
+    |> Enum.take(1)
+    |> Enum.map(fn category ->
+      %Embed{}
+      |> Embed.title("Channel Category")
+      |> Embed.color(@default_color)
+      |> Embed.field("guild_id", "#{category.guild_id} <end>")
+      |> Embed.field("id", "#{category.id}")
+      |> Embed.field("name", "#{category.name}")
+      |> Embed.field("nsfw", "#{category.nsfw}")
+      |> Embed.field("permission_overwrites", "<> []OverWrite")
+      |> Embed.field("position", "#{category.position}")
+      |> Embed.send()
+    end)
 
-    case firstTextChannel(channels) do
-      nil -> :ok
-      text ->
-        %Embed{}
-          |> Embed.title("Text Channel")
-          |> Embed.color(@default_color)
-          |> Embed.field("guild_id", "#{text.guild_id} <end>")
-          |> Embed.field("id", "#{text.id}")
-          |> Embed.field("last_message_id", "#{text.last_message_id}")
-          |> Embed.field("last_pin_timestamp", "#{text.last_pin_timestamp} <end>")
-          |> Embed.field("name", "#{text.name}")
-          |> Embed.field("nsfw", "#{text.nsfw}")
-          |> Embed.field("parent_id", "#{text.parent_id}")
-          |> Embed.field("permission_overwrites", "<> []OverWrite")
-          |> Embed.field("position", "#{text.position}")
-          |> Embed.field("topic", "#{text.topic} <end>")
-          |> Embed.send
-    end
+    channels
+    |> Enum.filter(&Channel.textChannel?/1)
+    |> Enum.take(1)
+    |> Enum.map(fn text ->
+      %Embed{}
+      |> Embed.title("Text Channel")
+      |> Embed.color(@default_color)
+      |> Embed.field("guild_id", "#{text.guild_id} <end>")
+      |> Embed.field("id", "#{text.id}")
+      |> Embed.field("last_message_id", "#{text.last_message_id}")
+      |> Embed.field("last_pin_timestamp", "#{text.last_pin_timestamp} <end>")
+      |> Embed.field("name", "#{text.name}")
+      |> Embed.field("nsfw", "#{text.nsfw}")
+      |> Embed.field("parent_id", "#{text.parent_id}")
+      |> Embed.field("permission_overwrites", "<> []OverWrite")
+      |> Embed.field("position", "#{text.position}")
+      |> Embed.field("topic", "#{text.topic} <end>")
+      |> Embed.send()
+    end)
 
-    case firstVoiceChannel(channels) do
-      nil -> :ok
-      voice ->
-        %Embed{}
-          |> Embed.title("Voice Channel")
-          |> Embed.color(@default_color)
-          |> Embed.field("bitrate", "#{voice.bitrate}")
-          |> Embed.field("guild_id", "#{voice.guild_id} <end>")
-          |> Embed.field("id", "#{voice.id}")
-          |> Embed.field("name", "#{voice.name}")
-          |> Embed.field("nsfw", "#{voice.nsfw} <end>")
-          |> Embed.field("parent_id", "#{voice.parent_id}")
-          |> Embed.field("permission_overwrites", "<> []OverWrite")
-          |> Embed.field("position", "#{voice.position}")
-          |> Embed.field("user_limit", "#{voice.user_limit}")
-          |> Embed.send
-    end
+    channels
+    |> Enum.filter(&Channel.voiceChannel?/1)
+    |> Enum.take(1)
+    |> Enum.map(fn voice ->
+      %Embed{}
+      |> Embed.title("Voice Channel")
+      |> Embed.color(@default_color)
+      |> Embed.field("bitrate", "#{voice.bitrate}")
+      |> Embed.field("guild_id", "#{voice.guild_id} <end>")
+      |> Embed.field("id", "#{voice.id}")
+      |> Embed.field("name", "#{voice.name}")
+      |> Embed.field("nsfw", "#{voice.nsfw} <end>")
+      |> Embed.field("parent_id", "#{voice.parent_id}")
+      |> Embed.field("permission_overwrites", "<> []OverWrite")
+      |> Embed.field("position", "#{voice.position}")
+      |> Embed.field("user_limit", "#{voice.user_limit}")
+      |> Embed.send()
+    end)
 
-    Cogs.say "Channel"
+    Cogs.say("Channel")
   end
-
-  defp firstChannelCategory([]) do
-    nil
-  end
-  defp firstChannelCategory([ h | t ]) do
-    case h do
-      %{bitrate: _bitrate} -> firstChannelCategory(t)
-      %{topic: _topic} -> firstChannelCategory(t)
-      _ -> h
-    end
-  end
-
-  defp firstTextChannel([]) do
-    nil
-  end
-  defp firstTextChannel([ h | t ]) do
-    case h do
-      %{topic: _topic} -> h
-      _ -> firstTextChannel(t)
-    end
-  end
-
-  defp firstVoiceChannel([]) do
-    nil
-  end
-  defp firstVoiceChannel([ h | t ]) do
-    case h do
-      %{bitrate: _bitrate} -> h
-      _ -> firstVoiceChannel(t)
-    end
-  end
-
 end

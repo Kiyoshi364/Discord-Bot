@@ -3,7 +3,6 @@ defmodule ElixirBot do
   alias Alchemy.Client
 
   def start(_type, _args) do
-
     [token, prefix] = read_config()
 
     run = Client.start(token)
@@ -16,8 +15,9 @@ defmodule ElixirBot do
 
   defp read_config() do
     {:ok, file} = File.read("config")
+
     file
-      |> String.split("\n")
-      |> Enum.take(2)
+    |> String.split("\n")
+    |> Enum.take(2)
   end
 end

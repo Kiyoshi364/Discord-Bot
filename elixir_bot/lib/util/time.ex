@@ -4,6 +4,7 @@ defmodule ElixirBot.Utils.Time do
       %NaiveDateTime{} = x -> x
       x -> NaiveDateTime.from_iso8601!(x)
     end
+
     {time1, time2} = {from.(time1), from.(time2)}
     NaiveDateTime.diff(time1, time2, unit)
   end

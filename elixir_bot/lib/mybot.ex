@@ -6,7 +6,7 @@ defmodule MyBot do
     use Alchemy.Cogs
 
     Cogs.def ping do
-      Cogs.say "pong!"
+      Cogs.say("pong!")
     end
   end
 
